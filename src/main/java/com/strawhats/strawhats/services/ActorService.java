@@ -14,36 +14,23 @@ public class ActorService {
 
     @Autowired
     private ActorRepo actorRepo; //an instance of our database to manipulate/modify data
-    List<Actor> actorList = new ArrayList<>();
-
-
-    //Business Logic
-//    List<Actor> voiceCastList = new ArrayList<>(
-//            Arrays.asList(
-//                    new Actor(1L, "Monkey D. Luffy", "Mayumi Tanaka"),
-//                    new Actor(2L, "Roronoa Zoro", "Kazuya Nakai"),
-//                    new Actor(3L, "Nami", "Akemi Okamura")
-//            )
-//    );
 
     //Get all Actors
     public List<Actor> getVoiceCastList(){
-        actorRepo.findAll().forEach(actorList:: add);
-        return actorList;
+        return actorRepo.findAll();
     }
 
-    //add a voice cast member
+    //add (POST) a voice cast member
     public void addVoiceCastMember(Actor actor){
         actorRepo.save(actor);
 
     }
 
-    //edit a voice cast member
+    //edit (PUT) a voice cast member
     public void editActor(Actor actor, Long id){
-        for (int i = 0; i < actorList.size(); i++) {
+        for (int i = 0; i < actorRepo.count(); i++) {
             Actor temp = actorRepo.findAll().get(i);
             if(temp.getId().equals(id)){
-                actorList.set(i ,actor);
                 actorRepo.save(actor);
             }
         }
@@ -53,18 +40,15 @@ public class ActorService {
     public void deleteVoiceCastMember(Actor actor, Long id){
         for (int i = 0; i < actorRepo.count(); i++) {
             Actor temp = actorRepo.findAll().get(i);
-            if(temp.getId().equals(id)){
+            if(temp.getId().equals(id) && temp.getActorName().equals(actor.getActorName())){
                 actorRepo.delete(actor);
-                actorList.remove(i);
-
-
             }
         }
     }
 
     //get one actor
     public Actor getActor(Long id){
-        for (Actor actor : actorList){
+        for (Actor actor : actorRepo.findAll()){
             if(actor.getId().equals(id)){
                 return actor;
             }
